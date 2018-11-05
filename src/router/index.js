@@ -8,7 +8,7 @@ import snake from "../components/snake/snake.vue"
 Vue.use(Router);
 
 export default new Router({
-  mode:'history',
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -21,12 +21,12 @@ export default new Router({
     {
       path: '/404',
       name: '404',
-      component: resolve => require(['@/components/notFound/404.vue'],resolve)
+      component: resolve => require(['@/components/notFound/404.vue'], resolve)
     },
     {
       path: '/sokoban',
       name: 'sokoban',
-      component: resolve => require(['@/components/sokoban/sokoban.vue'],resolve)
+      component: resolve => require(['@/components/sokoban/sokoban.vue'], resolve)
     },
     {
       path: '/one',
