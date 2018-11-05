@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import one from '../components/world1/one.vue'
 import eroshi from "../components/eroshi/eroshi.vue"
 import meigon from "../components/meigon/meigon.vue"
@@ -13,12 +12,21 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/snake'
+      redirect: '/sokoban'
     },
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: "*",
+      redirect: "/404"
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: resolve => require(['@/components/notFound/404.vue'],resolve)
+    },
+    {
+      path: '/sokoban',
+      name: 'sokoban',
+      component: resolve => require(['@/components/sokoban/sokoban.vue'],resolve)
     },
     {
       path: '/one',

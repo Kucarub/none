@@ -17,6 +17,16 @@
         hideItem:false,
       }
     },
+    watch: {
+      $route: {
+        handler: function(val, oldVal){
+
+        },
+        // 深度观察监听
+        deep: true,
+        immediate:true
+      }
+    },
     mounted() {
       let wh = $(window).width();
       let whChange = function (width) {
@@ -46,7 +56,6 @@
   body{
     margin: 0;
     padding: 0;
-    background-image: url("../static/Starry.jpg");
     font-size: 100px;
   }
 </style>
