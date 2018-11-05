@@ -7,24 +7,23 @@
 
 <script>
   import $ from 'jquery'
-  export default {
-    components: {
 
-    },
+  export default {
+    components: {},
     name: 'app',
-    data () {
+    data() {
       return {
-        hideItem:false,
+        hideItem: false,
       }
     },
     watch: {
       $route: {
-        handler: function(val, oldVal){
+        handler: function (val, oldVal) {
 
         },
         // 深度观察监听
         deep: true,
-        immediate:true
+        immediate: true
       }
     },
     mounted() {
@@ -41,19 +40,19 @@
         whChange(wh)
       });
     },
-    updated(){
+    updated() {
 
     },
     methods: {
-      goto:function(){
-           this.$router.replace({name:'one'})
-        },
+      goto: function () {
+        this.$router.replace({name: 'one'})
+      },
     }
   }
 </script>
 
 <style>
-  body{
+  body {
     margin: 0;
     padding: 0;
     font-size: 100px;
