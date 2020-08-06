@@ -5,6 +5,7 @@ import one from '../components/world1/one.vue'
 import eroshi from "../components/eroshi/eroshi.vue"
 import meigon from "../components/meigon/meigon.vue"
 import snake from "../components/snake/snake.vue"
+import online from "../components/online"
 
 Vue.use(Router);
 
@@ -13,12 +14,16 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/snake'
+      redirect: '/online'
     },
     {
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld
+    },{
+      path: '/online',
+      name: 'online',
+      component: online
     },
     {
       path: '/one',
