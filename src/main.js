@@ -3,8 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import calc from './calc/calc'
 Vue.config.productionTip = false;
+Vue.prototype.calc=calc;
 
 /* eslint-disable no-new */
 new Vue({

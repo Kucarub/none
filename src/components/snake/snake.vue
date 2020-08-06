@@ -1,6 +1,6 @@
 <template>
-  <div id="snake" style="width:100%;position: relative;margin: 0 auto">
-      <canvas id="bgImage" width="1920" height="1080"></canvas>
+  <div id="snake" style="width:100%;position: relative;margin: 0 auto;z-index: 1">
+    <canvas id="bgImage" width="1920" height="1080"></canvas>
     <div class="canvasContent">
       <div>{{msg}}</div>
       <canvas id="canvas" class="canvas" :width="boxX" :height="boxY"></canvas>
@@ -16,7 +16,7 @@
         <span v-else>pause</span>
       </a>
     </div>
-    <div class="cc" >
+    <div class="cc">
       <span @click="changeLevel" v-if="isPause">以地狱难度进行</span>
       <span v-else>score:{{score}}</span>
     </div>
@@ -25,73 +25,71 @@
 
 <script type="text/ecmascript-6">
   import $ from 'jquery'
-  let snake={
-    startX : 3, //开始头x坐标
-    startY : 0, //开始头y坐标
-    mes : [{x:3,y:0},{x:2,y:0},{x:1,y:0},{x:0,y:0}]
+
+  let snake = {
+    startX: 3, //开始头x坐标
+    startY: 0, //开始头y坐标
+    mes: [{x: 3, y: 0}, {x: 2, y: 0}, {x: 1, y: 0}, {x: 0, y: 0}]
   };
-  let resultArray=[];
-  let unitLen=20;
-  let ctx,timer,timerAnother;
+  let resultArray = [];
+  let unitLen = 20;
+  let ctx, timer, timerAnother;
 
   export default {
-    components: {
-
-    },
+    components: {},
     name: 'snake',
-    data () {
+    data() {
       return {
-        msg:'world one!!!',
-        isPause:true, //false是运行状态，true是暂停状态
-        isExist:false,//false point不存在，true存在
-        boxX:600,
-        boxY:600,
-        point:{x:null,y:null},
-        direction:'right',
-        level:200,
-        score:0
+        msg: 'world one!!!',
+        isPause: true, //false是运行状态，true是暂停状态
+        isExist: false,//false point不存在，true存在
+        boxX: 600,
+        boxY: 600,
+        point: {x: null, y: null},
+        direction: 'right',
+        level: 200,
+        score: 0
       }
     },
-    created(){
-
+    created() {
     },
     mounted() {
-        this.bindEvent();
-        this.starA()
+      this.bindEvent();
+      this.starA();
+      let h = $(window).height()
+      $("#snake").height(h);
     },
-    updated(){
+    updated() {
 
     },
     methods: {
-      changeLevel(){
-        this.level=50;
+      changeLevel() {
+        this.level = 50;
         this.createInit()
       },
-      createInit(){
-        ctx=document.getElementById("canvas").getContext('2d');
-        document.addEventListener('keydown',this.moveShape,false);
-        for(let i=0;i<this.boxX/unitLen;i++)
-        {
-          let row=[];
-          for(let j=0;j<this.boxY/unitLen;j++)
-          {
-            row[j]=0;
+      createInit() {
+        ctx = document.getElementById("canvas").getContext('2d');
+        document.addEventListener('keydown', this.moveShape, false);
+        for (let i = 0; i < this.boxX / unitLen; i++) {
+          let row = [];
+          for (let j = 0; j < this.boxY / unitLen; j++) {
+            row[j] = 0;
           }
-          resultArray[i]=row;
+          resultArray[i] = row;
         }
         this.clearPaint();
         this.drawSnake();
-        this.isPause=!this.isPause;
-        if(this.isPause){
+        this.isPause = !this.isPause;
+        if (this.isPause) {
           clearInterval(timer);
-        }else {
-          timer=window.setInterval(this.autoMove, this.level);
-          timerAnother=window.setTimeout(this.getPoint,1000);
+        } else {
+          timer = window.setInterval(this.autoMove, this.level);
+          timerAnother = window.setTimeout(this.getPoint, 1000);
         }
       },
-      getDirection(e){
+      getDirection(e) {
         let keyCode = e.which || e.keyCode;
-        switch(keyCode){
+        switch (keyCode) {
           case 38:
           case 87:
             return 'up';
@@ -114,45 +112,45 @@
             break;
         }
       },
-      moveShape(e){
-        if(this.getDirection(e)==='up') {
-          this.direction="up"
+      moveShape(e) {
+        if (this.getDirection(e) === 'up') {
+          this.direction = "up"
         }
-        if(this.getDirection(e)==='down') {
-          this.direction="down"
+        if (this.getDirection(e) === 'down') {
+          this.direction = "down"
         }
-        if(this.getDirection(e)==='left') {
-          this.direction="left"
+        if (this.getDirection(e) === 'left') {
+          this.direction = "left"
         }
-        if(this.getDirection(e)==='right') {
-          this.direction="right"
+        if (this.getDirection(e) === 'right') {
+          this.direction = "right"
         }
-        if(this.getDirection(e)==='pause') {
-          this.isPause=!this.isPause;
-          if(this.isPause){
+        if (this.getDirection(e) === 'pause') {
+          this.isPause = !this.isPause;
+          if (this.isPause) {
             clearInterval(timer);
-          }else {
-            timer=window.setInterval(this.autoMove,this.level)
+          } else {
+            timer = window.setInterval(this.autoMove, this.level)
           }
 
         }
       },
-      autoMove(){
+      autoMove() {
         const head = snake.mes[0];
-        switch(this.direction){
+        switch (this.direction) {
           case 'right':
-            if(this.checkCrashWall() && this.checkCrashSelf()){
-              if(head.x===this.point.x && head.y===this.point.y){
+            if (this.checkCrashWall() && this.checkCrashSelf()) {
+              if (head.x === this.point.x && head.y === this.point.y) {
                 this.getPoint();
                 this.addBody();
-                this.score+=100;
+                this.score += 100;
               }
               this.clearPaint();
-              snake.mes[0] = {x : head.x + 1 , y : head.y};
+              snake.mes[0] = {x: head.x + 1, y: head.y};
               this.move(head);
               this.drawSnake();
               this.drawPoint()
-            }else {
+            } else {
               console.log('over');
               clearInterval(timer);
               alert('菜鸡儿');
@@ -160,18 +158,18 @@
             }
             break;
           case 'left':
-            if(this.checkCrashWall() && this.checkCrashSelf()){
-              if(head.x===this.point.x && head.y===this.point.y){
+            if (this.checkCrashWall() && this.checkCrashSelf()) {
+              if (head.x === this.point.x && head.y === this.point.y) {
                 this.getPoint();
                 this.addBody();
-                this.score+=100;
+                this.score += 100;
               }
               this.clearPaint();
-              snake.mes[0] = {x : head.x - 1 , y : head.y};
+              snake.mes[0] = {x: head.x - 1, y: head.y};
               this.move(head);
               this.drawSnake();
               this.drawPoint()
-            }else {
+            } else {
               console.log('over');
               clearInterval(timer);
               alert('菜鸡儿');
@@ -179,18 +177,18 @@
             }
             break;
           case 'down':
-            if(this.checkCrashWall() && this.checkCrashSelf()){
-              if(head.x===this.point.x && head.y===this.point.y){
+            if (this.checkCrashWall() && this.checkCrashSelf()) {
+              if (head.x === this.point.x && head.y === this.point.y) {
                 this.getPoint();
                 this.addBody();
-                this.score+=100;
+                this.score += 100;
               }
               this.clearPaint();
-              snake.mes[0] = {x : head.x , y : head.y+1};
+              snake.mes[0] = {x: head.x, y: head.y + 1};
               this.move(head);
               this.drawSnake();
               this.drawPoint()
-            }else {
+            } else {
               console.log('over');
               clearInterval(timer);
               alert('菜鸡儿');
@@ -198,18 +196,18 @@
             }
             break;
           case 'up':
-            if(this.checkCrashWall() && this.checkCrashSelf()){
-              if(head.x===this.point.x && head.y===this.point.y){
+            if (this.checkCrashWall() && this.checkCrashSelf()) {
+              if (head.x === this.point.x && head.y === this.point.y) {
                 this.getPoint();
                 this.addBody();
-                this.score+=100;
+                this.score += 100;
               }
               this.clearPaint();
-              snake.mes[0] = {x : head.x , y : head.y-1};
+              snake.mes[0] = {x: head.x, y: head.y - 1};
               this.move(head);
               this.drawSnake();
               this.drawPoint()
-            }else {
+            } else {
               console.log('over');
               clearInterval(timer);
               alert('菜鸡儿');
@@ -218,82 +216,83 @@
             break;
         }
       },
-      move(head){
+      move(head) {
         let tmp;
-        for(let i = 1 ; i < snake.mes.length ; i++){
+        for (let i = 1; i < snake.mes.length; i++) {
           tmp = snake.mes[i];
           snake.mes[i] = head;
           head = tmp;
         }
       },
-      checkCrashWall(){
+      checkCrashWall() {
         let head = snake.mes[0];
-        if(head.x < 0 || head.y < 0){
+        if (head.x < 0 || head.y < 0) {
           return false;
         }
-        if(head.x > (this.boxX/unitLen - 1) || head.y > (this.boxY/unitLen - 1)){
+        if (head.x > (this.boxX / unitLen - 1) || head.y > (this.boxY / unitLen - 1)) {
           return false;
         }
         return true
       },
-      checkCrashSelf(){
+      checkCrashSelf() {
         let head = snake.mes[0];
-        for(let i = 1 ; i < snake.mes.length ; i++){
-          if(snake.mes[i].x === head.x && snake.mes[i].y === head.y){
+        for (let i = 1; i < snake.mes.length; i++) {
+          if (snake.mes[i].x === head.x && snake.mes[i].y === head.y) {
             return false;
           }
         }
         return true;
       },
-      addBody(){
+      addBody() {
         let first = snake.mes[0];//首项
         let len = snake.mes.length; //项数
-        let last = {x:(first.x-(len-1))-1,y:(first.y-(len-1))-1}; /*末项=首项+(项数-1)×公差*/
+        let last = {x: (first.x - (len - 1)) - 1, y: (first.y - (len - 1)) - 1};
+        /*末项=首项+(项数-1)×公差*/
         snake.mes.push(last);
       },
-      getPoint(){
-        this.point.x=null;
-        this.point.y=null;
-        const randX=Math.random();
-        const randY=Math.random();
-        this.point.x=Math.floor(randX*this.boxX/unitLen);
-        this.point.y=Math.floor(randY*this.boxY/unitLen);
-        this.isExist=true;
+      getPoint() {
+        this.point.x = null;
+        this.point.y = null;
+        const randX = Math.random();
+        const randY = Math.random();
+        this.point.x = Math.floor(randX * this.boxX / unitLen);
+        this.point.y = Math.floor(randY * this.boxY / unitLen);
+        this.isExist = true;
         this.drawPoint();
       },
-      clearPaint(){
-        ctx.clearRect(0,0,this.boxX,this.boxY);
+      clearPaint() {
+        ctx.clearRect(0, 0, this.boxX, this.boxY);
       },
-      drawSnake(){
-        ctx.fillStyle="#789262";
-        ctx.strokeStyle="black";
-        ctx.lineWidth=1;
-        for(let i = 0 ; i < snake.mes.length ; i++){
-          ctx.fillRect(snake.mes[i].x * unitLen , snake.mes[i].y * unitLen , unitLen ,unitLen);
-          ctx.strokeRect(snake.mes[i].x * unitLen , snake.mes[i].y * unitLen , unitLen ,unitLen);
+      drawSnake() {
+        ctx.fillStyle = "#789262";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        for (let i = 0; i < snake.mes.length; i++) {
+          ctx.fillRect(snake.mes[i].x * unitLen, snake.mes[i].y * unitLen, unitLen, unitLen);
+          ctx.strokeRect(snake.mes[i].x * unitLen, snake.mes[i].y * unitLen, unitLen, unitLen);
         }
-        ctx.fillStyle="#be002f";
-        ctx.fillRect(snake.mes[0].x * unitLen , snake.mes[0].y * unitLen , unitLen ,unitLen);
-        ctx.strokeRect(snake.mes[0].x * unitLen , snake.mes[0].y * unitLen , unitLen ,unitLen);
+        ctx.fillStyle = "#be002f";
+        ctx.fillRect(snake.mes[0].x * unitLen, snake.mes[0].y * unitLen, unitLen, unitLen);
+        ctx.strokeRect(snake.mes[0].x * unitLen, snake.mes[0].y * unitLen, unitLen, unitLen);
       },
-      drawPoint(){
-        let r,g,b;
-        r=Math.round(Math.random() * 255);
-        g=Math.round(Math.random() * 255);
-        b=Math.round(Math.random() * 255);
-        ctx.fillStyle="rgb("+r+","+g+","+b+")";
-        ctx.strokeStyle="black";
-        if(this.isExist===true){
-          ctx.fillRect(this.point.x*unitLen, this.point.y*unitLen, unitLen ,unitLen);
-          ctx.strokeRect(this.point.x*unitLen, this.point.y*unitLen, unitLen ,unitLen);
+      drawPoint() {
+        let r, g, b;
+        r = Math.round(Math.random() * 255);
+        g = Math.round(Math.random() * 255);
+        b = Math.round(Math.random() * 255);
+        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        ctx.strokeStyle = "black";
+        if (this.isExist === true) {
+          ctx.fillRect(this.point.x * unitLen, this.point.y * unitLen, unitLen, unitLen);
+          ctx.strokeRect(this.point.x * unitLen, this.point.y * unitLen, unitLen, unitLen);
         }
       },
-      bindEvent(){
-        window.addEventListener('contextmenu', function(e) {
+      bindEvent() {
+        window.addEventListener('contextmenu', function (e) {
           e.returnValue = false;
         });
       },
-      starA(){
+      starA() {
         var canvas = document.getElementById('bgImage'),
           ctx = canvas.getContext('2d'),
           w = canvas.width = window.innerWidth,
@@ -344,7 +343,7 @@
           //星星移动范围，值越大范围越小，
         }
 
-        var Star = function() {
+        var Star = function () {
 
           this.orbitRadius = random(maxOrbit(w, h));
           this.radius = random(60, this.orbitRadius) / 8;
@@ -360,7 +359,7 @@
           stars[count] = this;
         }
 
-        Star.prototype.draw = function() {
+        Star.prototype.draw = function () {
           var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
             y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
             twinkle = random(10);
@@ -389,10 +388,12 @@
           ctx.globalCompositeOperation = 'lighter';
           for (var i = 1, l = stars.length; i < l; i++) {
             stars[i].draw();
-          };
+          }
+          ;
 
           window.requestAnimationFrame(animation);
         }
+
         animation()
       }
     }
@@ -401,24 +402,33 @@
 
 <style scoped lang="scss">
   @import "../../css/buttonStyle.css";
-  p,button{
+
+  #snake {
+    background-image: url("../../../static/Starry.jpg");
+  }
+
+  p, button {
     margin: 0;
     padding: 0;
   }
-  .canvasContent{
+
+  .canvasContent {
     text-align: center;
     margin: 0 auto;
   }
-  #snake{
+
+  #snake {
     font-size: 0.16rem;
   }
-  #canvas{
+
+  #canvas {
     border: black 1px solid;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255, 255, 255, 0.8);
     /*background-color: rgba(158,208,72,0.5);*/
-    box-shadow: -15px 15px 15px rgba(6,17,47,.7);
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, .7);
   }
-  .cc{
+
+  .cc {
     position: fixed;
     width: 3rem;
     height: 0.6rem;
@@ -426,23 +436,25 @@
     margin-top: -0.3rem;
     line-height: 0.6rem;
     right: 10%;
-    background: linear-gradient(230deg,rgba(53,57,74,0) 0%,rgb(0,0,0) 100%);
+    background: linear-gradient(230deg, rgba(53, 57, 74, 0) 0%, rgb(0, 0, 0) 100%);
     text-align: center;
     font-size: 0.24rem;
-    box-shadow: -15px 15px 15px rgba(6,17,47,.7);
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, .7);
     opacity: 1;
-    transition-property: transform,opacity,box-shadow,top,left;
+    transition-property: transform, opacity, box-shadow, top, left;
     transition-duration: 0.5s;
     transform-origin: 161px 100%;
     transform: rotateX(0deg);
     z-index: 10;
   }
-  .cc span{
+
+  .cc span {
     cursor: pointer;
     color: red;
     font-size: 0.36rem;
   }
-  .startButton{
+
+  .startButton {
     text-align: left;
     margin-top: 0.45rem;
     position: fixed;
@@ -450,7 +462,8 @@
     z-index: 3;
     cursor: pointer;
   }
-  #bgImage{
+
+  #bgImage {
     position: fixed;
     opacity: 0.2;
     z-index: 1;

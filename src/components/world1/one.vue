@@ -20,9 +20,11 @@
       }
     },
     created(){
-
+      console.log(this.ma(1,8,-21))
     },
     mounted() {
+
+
       let world = new p2.World({
         gravity:[0, -9.82]
       });
@@ -51,6 +53,18 @@
     },
     methods: {
 
+      ma(a,b,c){
+        console.log(this.calc)
+        let x1,x2;
+        if(this.calc.Sub(this.calc.Mul(b,b),4*this.calc.Mul(a,c))<0){
+//          x1=(this.calc.Sub(-b , Math.pow(this.calc.Sub(this.calc.Mul(b,b),4*this.calc.Mul(a,c)),0.5)))/2*a;
+//          x2=(this.calc.Add(-b , Math.pow(this.calc.Sub(this.calc.Mul(b,b),4*this.calc.Mul(a,c)),0.5)))/2*a;
+        }else {
+//          x1=(this.calc.Sub(-b , Math.pow(this.calc.Sub(this.calc.Mul(b,b),4*this.calc.Mul(a,c)),0.5)))/2*a;
+//          x2=(this.calc.Add(-b , Math.pow(this.calc.Sub(this.calc.Mul(b,b),4*this.calc.Mul(a,c)),0.5)))/2*a
+        }
+        return {x1,x2}
+      },
     }
   }
 </script>
